@@ -50,7 +50,7 @@ var errAlreadyLogged = errors.New("run error")
 
 func mainWithExitCode() int {
 	app := cli.NewApp()
-	app.Name = "FRITZ!Go"
+	app.Name = "FritzGo"
 	app.Version = buildVersion + " @ " + buildTime.Format(time.RFC3339)
 	app.Flags = flags
 	app.Commands = []*cli.Command{

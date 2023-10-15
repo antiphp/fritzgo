@@ -1,4 +1,4 @@
-// Package fritzclient contains an HTTP client to access the FRITZ!Box.
+// Package fritzclient contains an HTTP client to access the fritz box.
 package fritzclient
 
 import (

@@ -21,7 +21,7 @@ type loginSIDResponse struct {
 	} `xml:"Users"`
 }
 
-// ListUsers returns FRITZ!Box users.
+// ListUsers returns fritz users.
 func (c *Client) ListUsers(ctx context.Context) ([]fritztypes.User, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.url.WithPath("login_sid.lua").WithQuery("version", "2").String(), nil)
 	if err != nil {

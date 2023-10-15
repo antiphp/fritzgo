@@ -1,4 +1,4 @@
-# FRITZ!Go
+# FritzGo
 
 Retrieve basic information from your FRITZ!Box.
 
@@ -6,10 +6,10 @@ Retrieve basic information from your FRITZ!Box.
 $ go run ./cmd/fritzgo/ --help
 
 NAME:
-   FRITZ!Go - A new cli application
+   FritzGo - A new cli application
 
 USAGE:
-   FRITZ!Go [global options] command [command options] [arguments...]
+   FritzGo [global options] command [command options] [arguments...]
 
 VERSION:
    <unknown> @ 1970-01-01T01:00:00+01:00
@@ -32,7 +32,7 @@ GLOBAL OPTIONS:
 
 ## List users
 
-List FRITZ!Box users.
+List fritz users.
 
 ```
 $ go run ./cmd/fritzgo/ users list
