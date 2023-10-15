@@ -1,0 +1,45 @@
+run:
+  tests: false
+  timeout: 5m
+
+linters-settings:
+  cyclop:
+    max-complexity: 15
+    skip-tests: true
+  lll:
+    line-length: 180
+  gofumpt:
+    extra-rules: true
+  gosec:
+    excludes: [ ]
+  depguard:
+    rules:
+      antiphp:
+        deny:
+          - pkg: pkg/errors
+
+linters:
+  enable-all: true
+  disable:
+    - deadcode # deprecated
+    - exhaustivestruct # deprecated
+    - golint # deprecated
+    - ifshort # deprecated
+    - interfacer # deprecated
+    - maligned # deprecated
+    - nosnakecase # deprecated
+    - scopelint # deprecated
+    - structcheck # deprecated
+    - varcheck # deprecated
+    - exhaustruct
+    - gochecknoglobals
+    - gomnd
+    - nlreturn
+    - varnamelen
+    - wrapcheck
+    - wsl
+
+issues:
+  exclude-use-default: false
+  exclude: [ ]
+  exclude-rules: [ ]

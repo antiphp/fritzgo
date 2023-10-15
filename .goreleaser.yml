@@ -1,0 +1,29 @@
+project_name: fritzgo
+dist: dist
+
+env:
+  - CGO_ENABLED=0
+
+builds:
+  - id: fritzgo
+    binary: fritzgo
+    main: ./cmd/fritzgo
+    ldflags:
+      - "-s -w -X main.buildTimestamp={{ .Timestamp }} -X main.buildVersion={{ .Version }} -X main.buildRevision={{ .FullCommit }}"
+    goos:
+      - linux
+    goarch:
+      - amd64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+
+changelog:
+  skip: true
+
+archives:
+  - id: default
+    format: binary
+    allow_different_binary_count: true
+    name_template: "fritzgo"
+
+snapshot:
+  name_template: 'dev-{{ slice .FullCommit 0 8}}'
