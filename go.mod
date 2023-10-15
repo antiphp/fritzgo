@@ -5,11 +5,9 @@ go 1.21
 require (
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/ettle/strcase v0.1.1
-	github.com/go-chi/chi/v5 v5.0.10
 	github.com/hamba/cmd/v2 v2.8.0
 	github.com/hamba/logger/v2 v2.5.0
 	github.com/jedib0t/go-pretty/v6 v6.4.8
-	github.com/json-iterator/go v1.1.12
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.25.7
 )
@@ -33,8 +31,6 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/openzipkin/zipkin-go v0.4.2 // indirect
