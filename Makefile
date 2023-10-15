@@ -15,13 +15,3 @@ lint:
 build:
 	@goreleaser release --rm-dist --snapshot
 .PHONY: build
-
-#Dev
-
-dev-up:
-	@docker-compose up -d
-.PHONY: dev-up
-
-dev-down:
-	@docker-compose down
-.PHONY: dev-down

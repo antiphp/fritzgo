@@ -1,3 +1,4 @@
+// Package fritzgo contains CLI tools to access FRITZ!Box data.
 package fritzgo
 
 import (
@@ -15,11 +16,13 @@ type Client interface {
 	ListUsers(context.Context) ([]fritztypes.User, error)
 }
 
+// FritzGo is the core application to retrieve, manage and render FRITZ!Box data.
 type FritzGo struct {
 	fritzBox Client
 	log      *logger.Logger
 }
 
+// New returns a new application.
 func New(addr, user, pass string, log *logger.Logger) (*FritzGo, error) {
 	client, err := fritzclient.New(addr, user, pass)
 	if err != nil {
@@ -32,6 +35,7 @@ func New(addr, user, pass string, log *logger.Logger) (*FritzGo, error) {
 	}, nil
 }
 
+// ListUsers retrieves and renders FRITZ!Box users.
 func (f *FritzGo) ListUsers(ctx context.Context) error {
 	users, err := f.fritzBox.ListUsers(ctx)
 	if err != nil {

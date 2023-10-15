@@ -1,3 +1,4 @@
+// Package render renders FRITZ!Box entities.
 package render
 
 import (

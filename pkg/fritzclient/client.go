@@ -1,3 +1,4 @@
+// Package fritzclient contains an HTTP client to access the FRITZ!Box.
 package fritzclient
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/hamba/logger/v2"
 )
 
+// Client is an HTTP client to access the FRITZ!Box.
 type Client struct {
 	http http.RoundTripper
 	url  *urlBuilder
@@ -16,6 +18,7 @@ type Client struct {
 	log *logger.Logger
 }
 
+// New returns a new FRITZ! HTTP client.
 func New(addr, user, pass string) (*Client, error) {
 	u, err := url.Parse(addr)
 	if err != nil {
