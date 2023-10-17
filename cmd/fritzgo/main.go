@@ -17,11 +17,14 @@ import (
 )
 
 const (
-	flagFritzURL  = "fritz.url"
-	flagFritzUser = "fritz.user"
-	flagFritzPass = "fritz.pass"
+	flagFritzURL           = "fritz.url"
+	flagFritzUser          = "fritz.user"
+	flagFritzPass          = "fritz.pass"
+	flagRendererTableStyle = "render.table.style"
 
 	catFritz = "FRITZ!Box:"
+
+	catStyle = "Rendering style:"
 )
 
 var (
@@ -38,6 +41,13 @@ var flags = cmd.Flags{
 		Value:    "http://fritz.box",
 		EnvVars:  []string{strcase.ToSNAKE(flagFritzURL)},
 	},
+	&cli.StringFlag{
+		Name:     flagRendererTableStyle,
+		Usage:    "The rendering table style.",
+		Category: catStyle,
+		Value:    "default",
+		EnvVars:  []string{strcase.ToSNAKE(flagRendererTableStyle)},
+	},
 }.Merge(cmd.LogFlags)
 
 func main() {
@@ -52,14 +62,19 @@ func mainWithExitCode() int {
 	app := cli.NewApp()
 	app.Name = "FritzGo"
 	app.Version = buildVersion + " @ " + buildTime.Format(time.RFC3339)
+	app.Usage = "CLI tool to access FRITZ!Box data"
 	app.Flags = flags
 	app.Commands = []*cli.Command{
+		{
+			Name:   "info",
+			Action: run(info),
+		},
 		{
 			Name: "users",
 			Subcommands: []*cli.Command{
 				{
 					Name:   "list",
-					Action: runUsersList,
+					Action: run(usersList),
 				},
 			},
 		},

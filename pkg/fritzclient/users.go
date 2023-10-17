@@ -33,7 +33,7 @@ func (c *Client) ListUsers(ctx context.Context) ([]fritztypes.User, error) {
 		return nil, fmt.Errorf("requesting: %w", err)
 	}
 	if resp.StatusCode/100 != 2 {
-		return nil, fmt.Errorf("unexpected http response: %d %s, expected 2xx for url: %s", resp.StatusCode, http.StatusText(resp.StatusCode), req.URL.String())
+		return nil, &HTTPError{resp.StatusCode, req.URL.String()}
 	}
 	defer func() {
 		_, _ = io.Copy(io.Discard, resp.Body)
