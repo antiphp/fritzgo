@@ -4,35 +4,37 @@ package fritzgo
 import (
 	"context"
 	"fmt"
-	"os"
 
-	"github.com/antiphp/fritzgo/internal/render"
-	"github.com/antiphp/fritzgo/pkg/fritzclient"
 	"github.com/antiphp/fritzgo/pkg/fritztypes"
 	"github.com/hamba/logger/v2"
 )
 
+// Client retrieves fritz data.
 type Client interface {
 	ListUsers(context.Context) ([]fritztypes.User, error)
+	Info(context.Context) (fritztypes.Info, error)
+}
+
+// Renderer render fritz data.
+type Renderer interface {
+	ListUsers([]fritztypes.User) error
+	Info(fritztypes.Info) error
 }
 
 // FritzGo is the core application to retrieve, manage and render fritz data.
 type FritzGo struct {
 	fritzBox Client
+	render   Renderer
 	log      *logger.Logger
 }
 
 // New returns a new application.
-func New(addr, user, pass string, log *logger.Logger) (*FritzGo, error) {
-	client, err := fritzclient.New(addr, user, pass)
-	if err != nil {
-		return nil, err
-	}
-
+func New(client Client, render Renderer, log *logger.Logger) *FritzGo {
 	return &FritzGo{
 		fritzBox: client,
+		render:   render,
 		log:      log,
-	}, nil
+	}
 }
 
 // ListUsers retrieves and renders fritz users.
@@ -42,8 +44,22 @@ func (f *FritzGo) ListUsers(ctx context.Context) error {
 		return fmt.Errorf("getting users: %w", err)
 	}
 
-	if err = render.UsersList(os.Stdout, users); err != nil {
+	if err = f.render.ListUsers(users); err != nil {
 		return fmt.Errorf("rendering users: %w", err)
+	}
+
+	return nil
+}
+
+// Info retrieves and renders basic information.
+func (f *FritzGo) Info(ctx context.Context) error {
+	info, err := f.fritzBox.Info(ctx)
+	if err != nil {
+		return fmt.Errorf("retrieving info: %w", err)
+	}
+
+	if err = f.render.Info(info); err != nil {
+		return fmt.Errorf("retrieving info: %w", err)
 	}
 
 	return nil

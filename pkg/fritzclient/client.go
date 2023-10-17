@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/antiphp/fritzgo/pkg/fritzclient/middleware"
 	"github.com/hamba/logger/v2"
@@ -15,7 +16,7 @@ type Client struct {
 	http http.RoundTripper
 	url  *urlBuilder
 
-	log *logger.Logger
+	log *logger.Logger //nolint:unused // Might get used in the future.
 }
 
 // New returns a new FRITZ! HTTP client.
@@ -25,8 +26,7 @@ func New(addr, user, pass string) (*Client, error) {
 		return nil, fmt.Errorf("creating url: %w", err)
 	}
 
-	var rt http.RoundTripper
-	rt = http.DefaultTransport
+	rt := http.DefaultTransport
 	if user != "" {
 		rt = middleware.WithBasicAuth(rt, user, pass)
 	}
@@ -41,6 +41,12 @@ type urlBuilder struct {
 	*url.URL
 }
 
+func (u *urlBuilder) WithPort(port uint16) *urlBuilder {
+	clone := *u.URL
+	clone.Host = clone.Host + ":" + strconv.Itoa(int(port))
+	return &urlBuilder{&clone}
+}
+
 func (u *urlBuilder) WithPath(path string) *urlBuilder {
 	return &urlBuilder{u.JoinPath(path)}
 }
@@ -52,4 +58,14 @@ func (u *urlBuilder) WithQuery(key, value string) *urlBuilder {
 	clone := *u.URL
 	clone.RawQuery = q.Encode()
 	return &urlBuilder{&clone}
+}
+
+// HTTPError represents an undesired HTTP response.
+type HTTPError struct {
+	Status int
+	URL    string
+}
+
+func (e *HTTPError) Error() string {
+	return fmt.Sprintf("unexpected http response: %d %s, expected 2xx for url: %s", e.Status, http.StatusText(e.Status), e.URL)
 }
