@@ -72,7 +72,6 @@ func (a *CBCAlgo) Decrypt(ciphertext []byte) ([]byte, error) {
 	mode.CryptBlocks(dst, src)
 
 	// Check.
-
 	h := md5.New() //nolint:gosec
 	h.Write(dst[4 : 4+len(dst)-20])
 	checksum := h.Sum(nil)
@@ -83,7 +82,6 @@ func (a *CBCAlgo) Decrypt(ciphertext []byte) ([]byte, error) {
 	}
 
 	// Extract.
-
 	sizeBytes := dst[4:8]
 	size, err := strconv.ParseInt(hex.EncodeToString(sizeBytes), 16, 64)
 	if err != nil {
