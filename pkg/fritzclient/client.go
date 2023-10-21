@@ -8,15 +8,12 @@ import (
 	"strconv"
 
 	"github.com/antiphp/fritzgo/pkg/fritzclient/middleware"
-	"github.com/hamba/logger/v2"
 )
 
 // Client is an HTTP client to access the FRITZ!Box.
 type Client struct {
 	http http.RoundTripper
 	url  *urlBuilder
-
-	log *logger.Logger //nolint:unused // Might get used in the future.
 }
 
 // New returns a new FRITZ! HTTP client.

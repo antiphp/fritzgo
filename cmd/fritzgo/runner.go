@@ -30,7 +30,7 @@ func run(runner func(*cli.Context, *fritzgo.FritzGo) error) func(*cli.Context) e
 			return errAlreadyLogged
 		}
 
-		return runner(c, fritzgo.New(client, renderer, log))
+		return runner(c, fritzgo.New(client, renderer))
 	}
 }
 

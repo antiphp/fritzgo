@@ -12,7 +12,7 @@ type basicAuth struct {
 	rt http.RoundTripper
 }
 
-// WithBasicAuth applies basic authentication.
+// WithBasicAuth returns a round tripper with applied basic auth.
 func WithBasicAuth(rt http.RoundTripper, user, pass string) http.RoundTripper {
 	return &basicAuth{
 		user: user,
@@ -22,6 +22,7 @@ func WithBasicAuth(rt http.RoundTripper, user, pass string) http.RoundTripper {
 	}
 }
 
+// RoundTrip implements the http.RoundTripper interface.
 func (a *basicAuth) RoundTrip(req *http.Request) (*http.Response, error) {
 	req = req.Clone(req.Context())
 	req.SetBasicAuth(a.user, a.pass)
