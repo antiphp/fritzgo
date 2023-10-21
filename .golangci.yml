@@ -33,6 +33,7 @@ linters:
     - varcheck # deprecated
     - exhaustruct
     - gochecknoglobals
+    - goerr113
     - gomnd
     - nlreturn
     - varnamelen

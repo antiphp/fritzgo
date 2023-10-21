@@ -9,7 +9,7 @@ import (
 	"github.com/hamba/logger/v2"
 )
 
-// Client retrieves fritz data.
+// Client represents an HTTP client to access fritz data.
 type Client interface {
 	ListUsers(context.Context) ([]fritztypes.User, error)
 	Info(context.Context) (fritztypes.Info, error)
@@ -29,11 +29,10 @@ type FritzGo struct {
 }
 
 // New returns a new application.
-func New(client Client, render Renderer, log *logger.Logger) *FritzGo {
+func New(client Client, render Renderer) *FritzGo {
 	return &FritzGo{
 		fritzBox: client,
 		render:   render,
-		log:      log,
 	}
 }
 
