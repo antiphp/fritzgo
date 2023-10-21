@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/antiphp/fritzgo/pkg/fritztypes"
-	"github.com/hamba/logger/v2"
 )
 
 // Client represents an HTTP client to access fritz data.
@@ -25,7 +24,6 @@ type Renderer interface {
 type FritzGo struct {
 	fritzBox Client
 	render   Renderer
-	log      *logger.Logger
 }
 
 // New returns a new application.
