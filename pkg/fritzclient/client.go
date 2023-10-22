@@ -5,19 +5,38 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
 
 	"github.com/antiphp/fritzgo/pkg/fritzclient/middleware"
 )
 
+// URLBuilder represents a URL builder with a fluent interface.
+type URLBuilder interface {
+	WithPort(uint16) URLBuilder
+	WithPath(string) URLBuilder
+	WithQuery(string, string) URLBuilder
+	String() string
+}
+
+// OptFunc applies optional client configuration.
+type OptFunc func(*Client)
+
+// WithURLBuilder applies a custom URL builder.
+//
+// The main purpose is testing.
+func WithURLBuilder(ub URLBuilder) OptFunc {
+	return func(c *Client) {
+		c.url = ub
+	}
+}
+
 // Client is an HTTP client to access the FRITZ!Box.
 type Client struct {
 	http http.RoundTripper
-	url  *urlBuilder
+	url  URLBuilder
 }
 
 // New returns a new FRITZ! HTTP client.
-func New(addr, user, pass string) (*Client, error) {
+func New(addr, user, pass string, opts ...OptFunc) (*Client, error) {
 	u, err := url.Parse(addr)
 	if err != nil {
 		return nil, fmt.Errorf("creating url: %w", err)
@@ -28,33 +47,16 @@ func New(addr, user, pass string) (*Client, error) {
 		rt = middleware.WithBasicAuth(rt, user, pass)
 	}
 
-	return &Client{
+	cl := Client{
 		http: rt,
-		url:  &urlBuilder{u},
-	}, nil
-}
+		url:  &URLBuilderImpl{u},
+	}
 
-type urlBuilder struct {
-	*url.URL
-}
+	for _, opt := range opts {
+		opt(&cl)
+	}
 
-func (u *urlBuilder) WithPort(port uint16) *urlBuilder {
-	clone := *u.URL
-	clone.Host = clone.Host + ":" + strconv.Itoa(int(port))
-	return &urlBuilder{&clone}
-}
-
-func (u *urlBuilder) WithPath(path string) *urlBuilder {
-	return &urlBuilder{u.JoinPath(path)}
-}
-
-func (u *urlBuilder) WithQuery(key, value string) *urlBuilder {
-	q := u.Query()
-	q.Set(key, value)
-
-	clone := *u.URL
-	clone.RawQuery = q.Encode()
-	return &urlBuilder{&clone}
+	return &cl, nil
 }
 
 // HTTPError represents an undesired HTTP response.

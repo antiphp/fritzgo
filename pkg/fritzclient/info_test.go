@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 	"time"
 
@@ -18,7 +19,7 @@ func TestClient_Info(t *testing.T) {
 	t.Cleanup(cancel)
 
 	srv := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		require.Equal(t, "/logiln_sid.lua?version=2", req.URL.RequestURI())
+		require.Equal(t, "/tr64desc.xml", req.URL.RequestURI())
 
 		rw.WriteHeader(http.StatusOK)
 		_, err := rw.Write([]byte(`
@@ -37,7 +38,7 @@ func TestClient_Info(t *testing.T) {
 	}))
 	t.Cleanup(srv.Close)
 
-	fritz, err := fritzclient.New(srv.URL, "", "")
+	fritz, err := fritzclient.New(srv.URL, "", "", fritzclient.WithURLBuilder(newTestBuilder(t, srv.URL, uint16(49000))))
 	require.NoError(t, err)
 
 	info, err := fritz.Info(ctx)
@@ -49,4 +50,39 @@ func TestClient_Info(t *testing.T) {
 		URL:     "http://fritz.box",
 		Mac:     "A3:7D:9B:C1:4E:2A",
 	}, info)
+}
+
+// testBuilder is a URL builder with a static port assignment, so we can use whatever httptest.NewServer() provides as a URL.
+type testBuilder struct {
+	url        fritzclient.URLBuilder
+	assertPort func(uint16)
+}
+
+func newTestBuilder(t *testing.T, u string, wantPort uint16) *testBuilder {
+	parsed, err := url.Parse(u)
+	require.NoError(t, err)
+
+	return &testBuilder{
+		url: &fritzclient.URLBuilderImpl{URL: parsed},
+		assertPort: func(got uint16) {
+			assert.Equal(t, wantPort, got)
+		},
+	}
+}
+
+func (b *testBuilder) WithPort(port uint16) fritzclient.URLBuilder {
+	b.assertPort(port)
+	return b
+}
+
+func (b *testBuilder) WithPath(s string) fritzclient.URLBuilder {
+	return b.url.WithPath(s)
+}
+
+func (b *testBuilder) WithQuery(key string, value string) fritzclient.URLBuilder {
+	return b.url.WithQuery(key, value)
+}
+
+func (b *testBuilder) String() string {
+	return b.url.String()
 }
