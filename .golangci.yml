@@ -39,8 +39,11 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+    - ireturn #
 
 issues:
   exclude-use-default: false
   exclude: [ ]
-  exclude-rules: [ ]
+  exclude-rules:
+    - path: pkg/fritzclient/url.go
+      text: "With.* returns interface"
